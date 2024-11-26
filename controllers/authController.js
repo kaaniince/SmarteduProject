@@ -9,7 +9,8 @@ exports.createUser = async (req, res) => {
       user,
     });
   } catch (error) {
-    res.status(400).json({ error: error });
+    console.error("Error creating user:", error);
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -18,18 +19,19 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).send("User Not Found!");
+      return res.status(400).json({ error: "User Not Found!" });
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      return res.status(400).send("Invalid Password");
+      return res.status(400).json({ error: "Invalid Password" });
     }
-    res.status(200).send("You are logged in!");
+    req.session.userID = user._id;
+    res.status(200).redirect("/");
   } catch (err) {
-    console.log(err);
+    console.error("Error logging in user:", err);
     res.status(400).json({
       status: "failed",
-      err,
+      error: err.message,
     });
   }
 };
