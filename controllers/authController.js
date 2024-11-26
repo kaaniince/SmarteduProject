@@ -26,7 +26,7 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ error: "Invalid Password" });
     }
     req.session.userID = user._id;
-    res.status(200).redirect("/");
+    res.status(200).redirect("/users/dashboard");
   } catch (err) {
     console.error("Error logging in user:", err);
     res.status(400).json({
@@ -39,5 +39,13 @@ exports.loginUser = async (req, res) => {
 exports.logoutUser = (req, res) => {
   req.session.destroy(() => {
     res.redirect("/");
+  });
+};
+
+exports.getDashboardPage = async (req, res) => {
+  const user = await User.findOne({ _id: req.session.userID });
+  res.status(200).render("dashboard", {
+    page_name: "dashboard",
+    user,
   });
 };
