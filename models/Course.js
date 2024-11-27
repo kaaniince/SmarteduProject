@@ -8,6 +8,7 @@ const CourseSchema = new Schema({
   createdAt: { type: Date, default: Date.now },
   slug: { type: String, unique: true },
   category: { type: Schema.Types.ObjectId, ref: "Category" },
+  user: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 CourseSchema.pre("validate", function (next) {
