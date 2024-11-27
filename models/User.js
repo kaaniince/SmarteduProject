@@ -11,6 +11,7 @@ const UserSchema = new Schema({
     enum: ["student", "teacher", "admin"],
     default: "student",
   },
+  courses: [{ type: mongoose.Schema.Types.ObjectId, ref: "Course" }],
 });
 
 //Hash password before saving to DB middleware
