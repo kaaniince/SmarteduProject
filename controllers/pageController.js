@@ -1,3 +1,8 @@
+const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 exports.getIndexPage = (req, res) => {
   console.log(req.session.userID);
   res.status(200).render("index", {
@@ -20,5 +25,11 @@ exports.getRegisterPage = (req, res) => {
 exports.getLoginPage = (req, res) => {
   res.status(200).render("login", {
     page_name: "login",
+  });
+};
+
+exports.getContactPage = (req, res) => {
+  res.status(200).render("contact", {
+    page_name: "contact",
   });
 };
