@@ -15,11 +15,25 @@ const UserSchema = new Schema({
 });
 
 //Hash password before saving to DB middleware
+// UserSchema.pre("save", function (next) {
+//   const user = this;
+//   bcrypt.hash(user.password, 10, (error, hash) => {
+//     user.password = hash;
+//     next();
+//   });
+// });
+
 UserSchema.pre("save", function (next) {
   const user = this;
-  bcrypt.hash(user.password, 10, (error, hash) => {
-    user.password = hash;
-    next();
+  if (!user.isModified("password")) return next();
+
+  bcrypt.genSalt(10, function (err, salt) {
+    if (err) return next(err);
+    bcrypt.hash(user.password, salt, function (err, hash) {
+      if (err) return next(err);
+      user.password = hash;
+      next();
+    });
   });
 });
 
